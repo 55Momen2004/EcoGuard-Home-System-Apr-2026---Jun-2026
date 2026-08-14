@@ -1,0 +1,12 @@
+<resources>
+    <color name="eco_blue">#0B3D79</color>
+    <color name="eco_blue_dark">#062B56</color>
+    <color name="eco_green">#43A047</color>
+    <color name="eco_green_dark">#2E7D32</color>
+    <color name="eco_red">#D32F2F</color>
+    <color name="eco_orange">#F57C00</color>
+    <color name="eco_surface">#F6F9FC</color>
+    <color name="eco_card">#FFFFFF</color>
+    <color name="eco_text">#102033</color>
+    <color name="eco_muted">#607080</color>
+</resources>
