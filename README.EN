@@ -1,1 +1,144 @@
+# EcoGuard Home – Android App
+
+EcoGuard Home is an Android application designed to monitor and control the EcoGuard Home smart home safety system via Bluetooth using the HC-05 module. The project also includes updated Arduino firmware that enables real-time fire and gas alerts without requiring any hardware modifications.
+
+## Can This Be Implemented with the Existing Hardware?
+
+Yes. The control features and safety notifications can be implemented using the existing hardware, provided that the updated firmware is uploaded to the Arduino Mega 2560.
+
+The Android app cannot independently detect fire or gas conditions. The Arduino must send alert messages to the app through the HC-05 Bluetooth module whenever a hazard is detected.
+
+## Project Structure
+
+- `app/` – Complete Android Studio project.
+- `firmware/EcoGuard_Home_Bluetooth_Notification_Firmware.ino` – Updated Arduino firmware for Bluetooth communication and safety notifications.
+
+## Application Name
+
+**EcoGuard Home**
+
+## Features
+
+- Bluetooth Classic connectivity using the HC-05 module.
+- Discovery and selection of paired Bluetooth devices.
+- Control of eight relay channels.
+- Enable and disable Smart Mode.
+- **All Loads OFF** command to turn off all connected loads.
+- **Mute Alarm** command to silence the buzzer through the app.
+- Real-time monitoring of Fire, Gas, Alarm, and Smart Mode status.
+- Live display of Gas ADC and Flame ADC readings.
+- Mobile notifications when an `ALERT` message is received from the Arduino.
+- Phone vibration for fire and gas alerts.
+
+## Technologies Used
+
+- **Platform:** Android
+- **Microcontroller:** Arduino Mega 2560
+- **Bluetooth Module:** HC-05
+- **Hardware Control:** 8-channel relay system
+- **Firmware:** Arduino C/C++
+- **Development Environment:** Android Studio
+
+## Building the APK
+
+Follow these steps to build the Android application:
+
+1. Open the `EcoGuardHome_Android_Project` directory in Android Studio.
+2. Wait for Gradle Sync to complete.
+3. Navigate to **Build > Build APK(s)**.
+4. Once the build is complete, locate the generated APK at:
+
+   ```text
+   app/build/outputs/apk/debug/app-debug.apk
+   ```
+
+5. Transfer the APK to your Android phone and install it.
+
+## Connecting and Using the App
+
+1. Power on the Arduino Mega and the EcoGuard Home system.
+2. Open your phone's Bluetooth settings and pair with the HC-05 module.
+3. If prompted for a PIN, try `1234` or `0000`, depending on the module configuration.
+4. Launch the EcoGuard Home application.
+5. Grant the required Bluetooth and notification permissions.
+6. Tap **Refresh Devices** to refresh the list of available paired devices.
+7. Select the HC-05 module and tap **Connect**.
+8. Use the control buttons to operate the system. Fire and gas notifications will appear automatically when the app receives the corresponding `ALERT` messages from the Arduino.
+
+## HC-05 and Arduino Mega Wiring
+
+The firmware uses the following default serial configuration:
+
+```cpp
+#define BT_SERIAL Serial1
+```
+
+This configuration assumes that the HC-05 module is connected to `Serial1` on the Arduino Mega 2560.
+
+| HC-05 Pin | Arduino Mega 2560 |
+|---|---|
+| TXD | RX1 – Pin 19 |
+| RXD | TX1 – Pin 18 |
+| GND | GND |
+
+**Important:** The Arduino TX signal is connected to the HC-05 RXD pin, and the HC-05 TXD signal is connected to the Arduino RX1 pin. Verify that the module's voltage requirements and logic levels are satisfied.
+
+If the HC-05 is physically connected to `Serial0` instead of `Serial1`, change the firmware configuration to:
+
+```cpp
+#define BT_SERIAL Serial
+```
+
+No hardware changes are required as long as the existing wiring matches the selected serial interface.
+
+## Bluetooth Command Protocol
+
+The Android app sends single-character commands to the Arduino.
+
+| Command | Function |
+|---|---|
+| `A` | Enable Smart Mode |
+| `H` | Disable Smart Mode |
+| `L` / `P` | Relay 1 ON / OFF |
+| `R` / `T` | Relay 2 ON / OFF + Servo action |
+| `Q` / `W` | Relay 3 ON / OFF |
+| `G` / `F` | Relay 4 ON / OFF |
+| `D` / `V` | Relay 5 ON / OFF |
+| `E` / `N` | Relay 6 ON / OFF |
+| `C` / `M` | Relay 7 ON / OFF |
+| `I` / `O` | Relay 8 ON / OFF |
+| `Y` | Turn off all connected loads |
+| `X` | Mute the alarm |
+| `S` | Request system status |
+
+## Arduino-to-App Communication Protocol
+
+The Arduino sends status updates and safety messages to the Android application.
+
+| Message | Example | Purpose |
+|---|---|---|
+| `READY` | `READY,ECOGUARD_HOME` | Indicates that the controller is ready. |
+| `STATUS` | `STATUS,FIRE=0,GAS=0,GAS_ADC=120,FLAME_ADC=800,SMART=0,ALARM=0,R1=0...` | Provides sensor readings, operating modes, alarm state, and relay status. |
+| `ALERT` | `ALERT,FIRE=1,GAS=0,...` | Reports a detected fire or gas hazard. |
+| `SAFE` | `SAFE,FIRE=0,GAS=0` | Indicates that fire and gas conditions have returned to a safe state. |
+
+## Important Limitations
+
+- **Android only:** The application is designed for Android because the HC-05 uses Bluetooth Classic Serial Port Profile (SPP).
+- **Firmware requirement:** The updated Arduino firmware must be installed to enable fire and gas notifications.
+- **Existing firmware compatibility:** Without the updated firmware, basic control will work only if the existing Arduino code supports the same command protocol. Fire and gas notifications will not work unless the Arduino sends the required hazard messages to the phone.
+- **Hardware compatibility:** The wiring, serial interface, and sensor configuration must match the firmware.
+
+## Safety Notice
+
+This project is intended for smart home monitoring and educational purposes. It should not be considered a certified fire detection or gas safety system. Do not rely on the application as a replacement for certified smoke detectors, gas detectors, or other essential safety equipment.
+
+## License
+
+No license has been specified for this project yet. Add a `LICENSE` file if you intend to distribute the source code under a particular open-source license.
+
+---
+
+**EcoGuard Home** – Bluetooth-based smart home control and environmental hazard monitoring.
+
 
